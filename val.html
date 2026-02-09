@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine’s Day</title>
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+/* aesthetic background */
+body{
+    background:linear-gradient(135deg,#ffdde1,#ee9ca7);
+    overflow:hidden;
+}
+
+/* card tweak */
+.card{
+    position:relative;
+}
+
+/* buttons */
+#yesBtn{
+    background:#ff4d6d;
+    color:white;
+    transition:transform 0.2s ease;
+}
+
+#noBtn{
+    background:#eee;
+    color:black;
+    position:absolute;
+}
+
+/* heart burst */
+.heart{
+    position:fixed;
+    font-size:22px;
+    animation:pop 1.2s ease-out forwards;
+}
+
+@keyframes pop{
+    0%{
+        transform:scale(0.2);
+        opacity:1;
+    }
+    100%{
+        transform:translateY(-120px) scale(1.5);
+        opacity:0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<audio id="song" loop>
+    <source src="music/valentine.mp3">
+</audio>
+
+<div class="card" id="card">
+
+    <img src="images/valentine.png">
+
+    <h1>❤️ Happy Valentine’s Day ❤️</h1>
+    <p>Will you be my Valentine? 💖</p>
+
+    <button id="yesBtn">Yes</button>
+    <button id="noBtn">No</button>
+
+</div>
+
+<script>
+const card = document.getElementById("card");
+const yesBtn = document.getElementById("yesBtn");
+const noBtn  = document.getElementById("noBtn");
+const song   = document.getElementById("song");
+
+let yesScale = 1;
+
+/* initial no position */
+noBtn.style.left = "190px";
+noBtn.style.top  = "190px";
+
+/* NO clicked → runs + YES grows */
+noBtn.addEventListener("click",(e)=>{
+    e.preventDefault();
+    moveNo();
+    growYes();
+});
+
+function moveNo(){
+    const maxX = card.clientWidth - noBtn.clientWidth;
+    const maxY = card.clientHeight - noBtn.clientHeight;
+
+    noBtn.style.left = Math.random()*maxX + "px";
+    noBtn.style.top  = Math.random()*maxY + "px";
+}
+
+function growYes(){
+    yesScale += 0.15;
+    yesBtn.style.transform = `scale(${yesScale})`;
+}
+
+/* YES clicked */
+yesBtn.addEventListener("click",()=>{
+    song.play();
+    burstHearts();
+
+    card.innerHTML = `
+        <h1>YAY! 🎉💗</h1>
+        <p>You just made this Valentine’s perfect ✨</p>
+    `;
+});
+
+/* hearts burst */
+function burstHearts(){
+    for(let i=0;i<25;i++){
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerText = "💗";
+
+        heart.style.left = (window.innerWidth/2 + Math.random()*200 - 100) + "px";
+        heart.style.top  = (window.innerHeight/2) + "px";
+
+        document.body.appendChild(heart);
+
+        setTimeout(()=>heart.remove(),1200);
+    }
+}
+</script>
+
+</body>
+</html>
